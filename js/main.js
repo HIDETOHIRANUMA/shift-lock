@@ -687,8 +687,8 @@
     const statEn = st ? `  ·  ${mmss(st.t)}, ${st.slips} ${st.slips === 1 ? 'slip' : 'slips'}` + (st.full && st.best ? ` (best ${mmss(st.best)})` : '') : '';
     const statJa = st ? `　・　${fun(st.t)}、落下${st.slips}回` + (st.full && st.best ? `（ベスト ${fun(st.best)}）` : '') : '';
     const lines2 = JA
-      ? ['おわり', 'おばあちゃんの手紙に、ぜんぶのピリオドが打てた。', 'SHIFT LOCK をあそんでくれて、ありがとう' + statJa, 'GitHub Game Off 2026（テーマ：SHIFT）参加作品 · 制作に Claude（Anthropic のAI）を使用 · フォント Courier Prime（SIL OFL）']
-      : ['the end', 'every sentence ended where it should.', 'thank you for playing SHIFT LOCK' + statEn, 'made for GitHub Game Off 2026 (theme: SHIFT) · built with Claude, an AI by Anthropic · font: Courier Prime (SIL OFL)'];
+      ? ['おわり', 'おばあちゃんの手紙に、ぜんぶのピリオドが打てた。', 'SHIFT LOCK をあそんでくれて、ありがとう' + statJa, 'GitHub Game Off 2026（テーマ：SHIFT）参加作品 · フォント Courier Prime（SIL OFL）']
+      : ['the end', 'every sentence ended where it should.', 'thank you for playing SHIFT LOCK' + statEn, 'made for GitHub Game Off 2026 (theme: SHIFT) · font: Courier Prime (SIL OFL)'];
     const rh = Math.max(22, H * 0.055);
     ctx.fillStyle = 'rgba(28,26,23,0.86)'; roundRect(W * 0.08, H - rh - 150, W * 0.84, 132, 8); ctx.fill();
     ctx.fillStyle = '#f4efe4'; ctx.textBaseline = 'middle';

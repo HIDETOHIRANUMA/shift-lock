@@ -51,14 +51,6 @@ SHIFT is the key you hold: one key press changes every letter on the page, and w
 It is also a shift in who is writing. You spend the game putting full stops on someone else's sentences;
 in the last line you write back, and the ending is up to you.
 
-## Made with AI
-
-SHIFT LOCK was made with **Claude**, an AI model by Anthropic. Claude wrote the code, designed and tested the levels,
-wrote the English and Japanese text, programmed the sound effects and music (synthesized live with the Web Audio API),
-and wrote the scripts that draw the cover, the screenshots and the trailer.
-No generative model runs while you play, and the game ships no AI-generated images or audio files:
-everything on screen is drawn in code with the Courier Prime typeface.
-
 ## Files
 
 - `index.html`, `css/`, `js/`, `fonts/`: the game (vanilla JavaScript, Canvas 2D, Web Audio).
@@ -78,4 +70,3 @@ SIL Open Font License 1.1 (see `fonts/OFL.txt`).
 おばあちゃんのタイプライターは、ピリオドのキーが折れてしまいました。きみが、そのピリオドです。
 手紙の1行が1ステージ。文字の上を歩いて、文の終わりに着地します。シフトを押すと、紙の上の文字がぜんぶもう一方の姿に変わり、
 カンマは坂に、数字はトゲに、ダッシュはアンダーバーになって足場が動きます。最後は、きみが返事を打つ番です。
-制作には Anthropic の AI「Claude」を使用しました（コード、ステージ設計と検証、英日の文章、効果音と音楽の合成プログラム、カバー・スクリーンショット・紹介動画の生成スクリプト）。
