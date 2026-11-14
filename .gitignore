@@ -1,0 +1,4 @@
+node_modules/
+trailer/out/
+tools/solutions.json
+*.log

@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:"Courier Prime";src:url(../fonts/CourierPrime-Bold.woff2) format('woff2');font-weight:700}
+@font-face{font-family:"Courier Prime";src:url(../fonts/CourierPrime-Italic.woff2) format('woff2');font-weight:400;font-style:italic}
+html,body{margin:0;background:#2a2522}canvas{display:block}</style></head><body><canvas id="c"></canvas><script>
+// itch.io cover, 630x500 drawn at 2x.
+(async()=>{await Promise.all([document.fonts.load('700 100px "Courier Prime"'),document.fonts.load('italic 400 40px "Courier Prime"')]);
+const W=1260,H=1000,c=document.getElementById('c');c.width=W;c.height=H;const g=c.getContext('2d');
+let seed=7;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+const INK='#1c1a17',RED='#b3302a',PAPER='#efe8d8',PENCIL='#6c665f';
+// paper with grain and fibres
+g.fillStyle=PAPER;g.fillRect(0,0,W,H);
+const img=g.getImageData(0,0,W,H);for(let i=0;i<img.data.length;i+=4){if(rnd()<0.5){const v=-6+rnd()*5;img.data[i]+=v;img.data[i+1]+=v;img.data[i+2]+=v*1.2;}}g.putImageData(img,0,0);
+for(let k=0;k<420;k++){g.strokeStyle=`rgba(120,100,70,${0.05+rnd()*0.06})`;g.lineWidth=1;const x=rnd()*W,y=rnd()*H,a=rnd()*6.28,l=10+rnd()*30;g.beginPath();g.moveTo(x,y);g.lineTo(x+Math.cos(a)*l,y+Math.sin(a)*l);g.stroke();}
+// typed words with the other face ghosted underneath, like the page mid-shift
+const typed=(txt,ghost,x,base,size)=>{g.font=`700 ${size}px "Courier Prime"`;g.textBaseline='alphabetic';const adv=size*0.6;
+ for(let i=0;i<txt.length;i++){const jx=(rnd()-0.5)*4,jy=(rnd()-0.5)*5,rot=(rnd()-0.5)*0.035;
+  g.save();g.translate(x+i*adv+adv/2+jx,base+jy);g.rotate(rot);g.textAlign='center';
+  g.globalAlpha=0.16;g.fillStyle=INK;g.fillText(ghost[i],0,0);
+  g.globalAlpha=0.86+rnd()*0.14;g.fillText(txt[i],0,0);g.restore();}
+ g.globalAlpha=1;return x+txt.length*adv;};
+const size=262,adv=size*0.6,x0=(W-6*adv)/2+8;
+typed('SHIFT','shift',x0-adv*0.5,388,size);
+const xe=typed('LOCK','lock',x0+adv*0.5,676,size);
+// grandpa's red pen under LOCK
+g.fillStyle=RED;g.globalAlpha=0.86;g.beginPath();const ux0=x0+adv*0.45,ux1=xe+6;
+for(let x=ux0;x<=ux1;x+=20)g.lineTo(x,712+Math.sin(x*0.03)*1.6);for(let x=ux1;x>=ux0;x-=20)g.lineTo(x,734+Math.sin(x*0.025+1)*1.8);g.closePath();g.fill();g.globalAlpha=1;
+// the dot, where the full stop belongs
+const dx=xe+64,dy=640,r=38;g.fillStyle=INK;g.beginPath();for(let i=0;i<=40;i++){const a=i/40*Math.PI*2,rr=r+Math.sin(a*3)*1.2;i?g.lineTo(dx+Math.cos(a)*rr,dy+Math.sin(a)*rr):g.moveTo(dx+Math.cos(a)*rr,dy+Math.sin(a)*rr);}g.fill();
+g.fillStyle='rgba(255,255,255,0.22)';g.beginPath();g.ellipse(dx-13,dy-16,10,6,-0.6,0,6.283);g.fill();
+for(const sx of[-14,14]){g.fillStyle='#fff';g.beginPath();g.ellipse(dx+sx+5,dy-4,8.6,10.4,0,0,6.283);g.fill();g.fillStyle=INK;g.beginPath();g.arc(dx+sx+8,dy-2.6,4.4,0,6.283);g.fill();}
+// pencil note
+g.save();g.translate(W/2,850);g.rotate(-0.02);g.fillStyle=PENCIL;g.font='italic 400 54px "Courier Prime"';g.textAlign='center';g.fillText('you are the full stop.',0,0);g.restore();
+// the shift keycap and the lock lamp, top right
+g.save();g.translate(W-300,54);g.fillStyle=INK;g.beginPath();g.roundRect(0,10,236,96,16);g.fill();g.fillStyle='#d8ceb8';g.beginPath();g.roundRect(0,4,236,96,16);g.fill();
+g.strokeStyle=INK;g.lineWidth=4;g.beginPath();g.roundRect(0,4,236,96,16);g.stroke();g.fillStyle=INK;g.font='700 40px "Courier Prime"';g.textBaseline='middle';g.fillText('⇧ shift',26,54);g.restore();
+g.save();g.translate(W-430,92);g.fillStyle=RED;g.beginPath();g.arc(16,16,14,0,6.283);g.fill();g.strokeStyle=INK;g.lineWidth=3;g.stroke();g.fillStyle=INK;g.font='700 30px "Courier Prime"';g.textBaseline='middle';g.fillText('lock',40,17);g.restore();
+// platen roller along the bottom
+const rh=56,gr=g.createLinearGradient(0,H-rh,0,H);gr.addColorStop(0,'#0d0c0b');gr.addColorStop(0.35,'#3b3633');gr.addColorStop(0.55,'#1d1a18');gr.addColorStop(1,'#090807');g.fillStyle=gr;g.fillRect(0,H-rh,W,rh);
+g.fillStyle='rgba(255,255,255,0.08)';g.fillRect(0,H-rh+rh*0.3,W,3);
+document.title='DONE';})();</script></body></html>

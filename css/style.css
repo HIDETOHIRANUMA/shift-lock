@@ -1,0 +1,31 @@
+@font-face { font-family: "Courier Prime"; src: url(../fonts/CourierPrime-Bold.woff2) format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+@font-face { font-family: "Courier Prime"; src: url(../fonts/CourierPrime-Regular.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Courier Prime"; src: url(../fonts/CourierPrime-Italic.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+
+:root { --paper: #efe8d8; --ink: #1c1a17; --red: #b3302a; --desk: #2a2522; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--desk); overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
+canvas { display: block; width: 100vw; height: 100vh; height: 100dvh; outline: none; }
+
+#touch { position: fixed; inset: 0; pointer-events: none; }
+#touch .pad { position: absolute; bottom: max(14px, env(safe-area-inset-bottom)); display: flex; gap: 12px; pointer-events: auto; }
+#touch .pad.left { left: max(14px, env(safe-area-inset-left)); }
+#touch .pad.right { right: max(14px, env(safe-area-inset-right)); align-items: flex-end; }
+#touch button { width: 76px; height: 76px; border-radius: 16px; border: 2px solid #1c1a17; background: rgba(239, 232, 216, 0.82); color: #1c1a17;
+  font: 700 30px "Courier Prime", monospace; box-shadow: 0 4px 0 #1c1a17; touch-action: none; }
+#touch button.on { transform: translateY(3px); box-shadow: 0 1px 0 #1c1a17; background: #d9cfb9; }
+#touch button.small { width: 64px; height: 44px; font-size: 15px; align-self: flex-start; }
+#touch button.small.on { background: #b3302a; color: #fff; }
+#touch .menu-btn { position: absolute; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right)); width: 48px; height: 48px; font-size: 18px; pointer-events: auto; }
+
+#menu { position: fixed; inset: 0; background: rgba(20, 17, 15, 0.55); display: flex; align-items: center; justify-content: center; padding: 16px; }
+#menu .sheet { background: var(--paper); color: var(--ink); width: min(440px, 100%); padding: 22px 22px 16px; border-radius: 4px; box-shadow: 0 18px 40px rgba(0,0,0,.45); font-family: "Courier Prime", monospace; }
+#menu h2 { margin: 0 0 12px; font-weight: 700; letter-spacing: .08em; }
+#menu button { display: block; width: 100%; text-align: left; margin: 6px 0; padding: 10px 12px; font: 700 18px "Courier Prime", monospace; color: var(--ink); background: transparent; border: 2px solid var(--ink); border-radius: 3px; cursor: pointer; }
+#menu button:hover, #menu button:focus-visible { background: #e2d8c2; outline: none; }
+#menu .keys { font: 400 14px/1.5 "Courier Prime", monospace; color: #5d564e; margin: 14px 0 0; }
+
+#reply { position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; gap: 8px; width: min(560px, calc(100% - 32px)); }
+#reply input { flex: 1; min-width: 0; font: 700 20px "Courier Prime", monospace; padding: 10px 12px; border: 2px solid var(--ink); border-radius: 3px; background: var(--paper); color: var(--ink); }
+#reply button { font: 700 18px "Courier Prime", monospace; padding: 0 16px; border: 2px solid var(--ink); border-radius: 3px; background: var(--ink); color: var(--paper); }
+[hidden] { display: none !important; }

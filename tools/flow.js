@@ -1,0 +1,25 @@
+// Headless flow test: every line from typing to its full stop, the reply and the ending.
+const {chromium}=require('playwright');const http=require('http');const fs=require('fs');const path=require('path');
+const root=path.resolve(__dirname,'..');const out=process.argv[2];fs.mkdirSync(out,{recursive:true});
+const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.woff2':'font/woff2'};
+const srv=http.createServer((q,r)=>{let u=decodeURIComponent(q.url.split('?')[0]);if(u==='/')u='/index.html';const p=path.join(root,u);fs.readFile(p,(e,b)=>{if(e){r.writeHead(404);r.end();return}r.writeHead(200,{'Content-Type':types[path.extname(p)]||'application/octet-stream'});r.end(b)})}).listen(0,async()=>{
+ const b=await chromium.launch({args:['--autoplay-policy=no-user-gesture-required']});const pg=await b.newPage({viewport:{width:1280,height:720}});
+ const errs=[];pg.on('pageerror',e=>errs.push(e.message));pg.on('console',m=>{if(m.type()==='error')errs.push(m.text())});
+ await pg.goto(`http://127.0.0.1:${srv.address().port}/`);await pg.waitForTimeout(1200);await pg.keyboard.press('KeyM');await pg.keyboard.press('KeyM');
+ await pg.evaluate(()=>SHIFTLOCK.start(0));
+ const st=()=>pg.evaluate(()=>({scene:SHIFTLOCK.scene,line:SHIFTLOCK.line}));
+ for(let k=0;k<8;k++){
+  for(let t=0;t<40;t++){const s=await st();if(s.scene==='play'&&s.line===k)break;await pg.evaluate(()=>SHIFTLOCK.skipFeed());await pg.waitForTimeout(150);}
+  await pg.waitForTimeout(700);await pg.screenshot({path:`${out}/line${k}.png`});
+  await pg.evaluate(()=>SHIFTLOCK.warp());await pg.waitForTimeout(1700);
+  console.log('after line',k,JSON.stringify(await st()));
+ }
+ for(let t=0;t<30;t++){const s=await st();if(s.scene==='reply')break;await pg.evaluate(()=>SHIFTLOCK.skipFeed());await pg.waitForTimeout(150);}
+ await pg.keyboard.type('i love you too, gran');await pg.waitForTimeout(300);await pg.keyboard.press('.');await pg.waitForTimeout(200);
+ await pg.screenshot({path:`${out}/reply_typing.png`});
+ await pg.keyboard.press('Enter');
+ for(let t=0;t<30;t++){const s=await st();if(s.scene==='play')break;await pg.evaluate(()=>SHIFTLOCK.skipFeed());await pg.waitForTimeout(150);}
+ await pg.waitForTimeout(600);await pg.screenshot({path:`${out}/reply_play.png`});
+ await pg.evaluate(()=>SHIFTLOCK.warp());await pg.waitForTimeout(1800);console.log('after reply',JSON.stringify(await st()));
+ await pg.waitForTimeout(4500);await pg.screenshot({path:`${out}/ending.png`});
+ console.log('errors:',errs.length?errs.join(' | '):'none');await b.close();srv.close();});

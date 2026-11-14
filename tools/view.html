@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta charset="utf-8"><style>@font-face{font-family:"Courier Prime";src:url(../fonts/CourierPrime-Bold.woff2) format('woff2');font-weight:700}body{margin:0;background:#fff}</style>
+<script src="../js/engine.js"></script></head><body><canvas id=c></canvas><script>
+(async()=>{await document.fonts.load(SL.FONT);
+const lv=JSON.parse(decodeURIComponent(location.hash.slice(1)));
+const L=SL.build(lv,(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c});
+const c=document.getElementById('c');const S=0.5;c.width=L.width*S;c.height=(L.height*2+20)*S;const g=c.getContext('2d');
+g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);
+for(let m=0;m<2;m++){const M=L.masks[m];const oy=m*(L.height+20);
+ g.fillStyle=m?'#f2ece0':'#eef3f8';g.fillRect(0,oy*S,c.width,L.height*S);
+ g.fillStyle='#222';for(let y=0;y<M.gh;y++)for(let x=0;x<M.gw;x++)if(M.grid[y*M.gw+x]){g.fillStyle=L.bridges[m].some(b=>b.gx===x&&y>=b.row&&y<b.row+3)?"#d33":"#222";g.fillRect(x*SL.CELL*S,(oy+y*SL.CELL)*S,SL.CELL*S,SL.CELL*S);}
+ g.strokeStyle='rgba(255,0,0,.35)';g.beginPath();g.moveTo(0,(oy+L.base)*S);g.lineTo(c.width,(oy+L.base)*S);g.stroke();
+ g.strokeStyle='rgba(0,0,255,.15)';for(const k of L.cells){g.beginPath();g.moveTo(k.x*S,oy*S);g.lineTo(k.x*S,(oy+L.height)*S);g.stroke();}
+ g.strokeStyle='rgba(0,150,0,.8)';g.strokeRect(L.goalX*S,(oy+L.base-SL.FS*0.5)*S,SL.ADV*S,SL.FS*0.7*S);
+}
+document.title='DONE';})();</script></body></html>

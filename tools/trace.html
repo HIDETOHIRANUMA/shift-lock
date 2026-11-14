@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><style>@font-face{font-family:"Courier Prime";src:url(../fonts/CourierPrime-Bold.woff2) format('woff2');font-weight:700}</style>
+<script src="../js/engine.js"></script></head><body><script>
+(async()=>{await document.fonts.load(SL.FONT);
+window.ALL=1;const q=new URLSearchParams(location.hash.slice(1));const lv=JSON.parse(q.get('lv'));const plan=JSON.parse(q.get('plan'));
+const mk=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c};
+const L=SL.build(lv,mk);const d=SL.newDot(L);const out=[];const DT=1/120;let pj=0;
+// surface profile: for each 6px column, the top ink y (relative to baseline) in each mode
+const prof=[];for(let m=0;m<2;m++){const M=L.masks[m];const row=[];for(let gx=0;gx<M.gw;gx+=3){let top=null;for(let gy=0;gy<M.gh;gy++)if(M.grid[gy*M.gw+gx]){top=L.base-gy*SL.CELL;break;}row.push(top===null?'.':top);}prof.push(row.join(' '));}
+out.push('base='+L.base+' goalX='+L.goalX+' cells: '+L.cells.map(c=>c.i+':'+c.x).join(' '));
+out.push('prof0 '+prof[0]);out.push('prof1 '+prof[1]);
+for(const [n,dir,j,s] of plan){for(let f=0;f<n;f++){const inp={left:dir<0,right:dir>0,jumpHeld:!!j,jumpPressed:!!j&&!pj,shift:s};pj=j;const e=SL.step(L,d,inp,DT);
+ if(e||f%3==0)out.push([d.x.toFixed(2),(L.base-(d.y+SL.P.h)).toFixed(2),d.vx.toFixed(1),d.mode,d.ground?"G":"-",e||""].join(" "));if(d.won||d.fell)break;}if(d.won||d.fell)break;}
+{const M=L.masks[d.mode];const g0=Math.floor(d.x/2)-6,g1=Math.floor((d.x+18)/2)+12;const cols=[];for(let gx=g0;gx<=g1;gx++){let segs=[];let inn=false,st=0;for(let gy=0;gy<M.gh;gy++){const v=M.grid[gy*M.gw+gx];if(v&&!inn){inn=true;st=gy}if(!v&&inn){inn=false;segs.push((L.base-st*2)+'..'+(L.base-gy*2))}}if(inn)segs.push((L.base-st*2)+'..end');cols.push((gx*2)+':'+segs.join(','))}out.push('dot x='+d.x.toFixed(1)+' bottomH='+(L.base-d.y-18).toFixed(1));out.push(cols.join(' | '));}
+window.R=out;document.title='DONE';})();</script></body></html>

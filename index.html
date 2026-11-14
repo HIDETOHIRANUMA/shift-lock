@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>SHIFT LOCK</title>
+<meta name="description" content="Gran's typewriter lost its period key. You are the full stop. Hold Shift to change every letter on the page.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23efe8d8'/%3E%3Ccircle cx='16' cy='17' r='8' fill='%231c1a17'/%3E%3Ccircle cx='13.5' cy='15.5' r='1.8' fill='%23fff'/%3E%3Ccircle cx='18.5' cy='15.5' r='1.8' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="game" aria-label="SHIFT LOCK game screen"></canvas>
+
+<div id="touch" hidden>
+  <div class="pad left">
+    <button data-k="left" aria-label="move left">&#9664;</button>
+    <button data-k="right" aria-label="move right">&#9654;</button>
+  </div>
+  <div class="pad right">
+    <button data-k="lock" class="small" aria-label="shift lock">LOCK</button>
+    <button data-k="shift" aria-label="shift">&#8679;</button>
+    <button data-k="jump" aria-label="jump">&#10514;</button>
+  </div>
+  <button data-k="menu" class="menu-btn" aria-label="menu">II</button>
+</div>
+
+<div id="menu" hidden>
+  <div class="sheet" role="dialog" aria-label="menu">
+    <h2>SHIFT LOCK</h2>
+    <button data-act="resume">resume</button>
+    <button data-act="retype">retype this line (R)</button>
+    <button data-act="lang">日本語: <span id="lang-state">off</span> (J)</button>
+    <button data-act="sound">sound: <span id="sound-state">on</span> (M)</button>
+    <button data-act="title">back to the title</button>
+    <p class="keys">&larr; &rarr; / A D move &middot; space / W / &uarr; jump &middot; hold shift (or X) &middot; caps lock / L lock the shift &middot; R retype &middot; esc menu &middot; gamepad works too</p>
+  </div>
+</div>
+
+<div id="reply" hidden>
+  <input id="reply-input" type="text" maxlength="26" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="your reply to Gran">
+  <button id="reply-done">done</button>
+</div>
+
+<script src="js/engine.js"></script>
+<script src="js/levels.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

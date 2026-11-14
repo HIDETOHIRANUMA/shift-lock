@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="utf-8"><style>@font-face{font-family:"Courier Prime";src:url(../fonts/CourierPrime-Bold.woff2) format('woff2');font-weight:700}</style>
+<script src="../js/engine.js"></script><script src="../js/levels.js"></script></head><body><script>
+// Make a solver plan read better on video: hold shift longer where the line still gets finished.
+(async()=>{await document.fonts.load(SL.FONT);
+const q=JSON.parse(decodeURIComponent(location.hash.slice(1)));const out=[];
+const mk=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c};const DT=1/120;
+for(const c of q){const lv=c.lv!=null?c.lv:SLEVELS[c.i];const L=SL.build(lv,mk);
+ const settle=c.plan[0];const units=[];for(const [n,dir,j,s] of c.plan.slice(1))for(let k=0;k<n/10;k++)units.push({dir,j,s});
+ const sim=(U)=>{const d=SL.newDot(L,c.cp==null?null:c.cp);let pj=0,steps=0;const seq=[[settle[0],0,0,settle[3]]].concat(U.map(u=>[10,u.dir,u.j,u.s]));
+  for(const [n,dir,j,s] of seq)for(let f=0;f<n;f++){const e=SL.step(L,d,{left:dir<0,right:dir>0,jumpHeld:!!j,jumpPressed:!!j&&!pj,shift:s},DT);pj=j;steps++;if(d.won)return steps;if(d.fell)return 0;}
+  // keep walking right (no input change) for up to 2 s after the plan ends
+  for(let f=0;f<240;f++){const e=SL.step(L,d,{left:false,right:false,jumpHeld:false,jumpPressed:false,shift:U.length?U[U.length-1].s:0},DT);steps++;if(d.won)return steps;if(d.fell)return 0;}return 0;};
+ const t0=sim(units);let U=units.map(u=>({...u}));const runs=()=>{const r=[];for(let k=0;k<U.length;k++)if(U[k].s&&(k===0||!U[k-1].s)){let e=k;while(e+1<U.length&&U[e+1].s)e++;r.push([k,e]);}return r;};
+ const minHold=c.minHold||7,slack=(c.slack||0.6)/DT;
+ for(let pass=0;pass<3;pass++){
+  // fill short gaps between two holds
+  const R=runs();for(let k=0;k+1<R.length;k++){const a=R[k][1]+1,b=R[k+1][0]-1;if(b-a+1<=5){const T=U.map(u=>({...u}));for(let x=a;x<=b;x++)T[x].s=1;const t=sim(T);if(t&&t<=t0+slack){U=T;}}}
+  // stretch each hold to at least minHold units, to the right first, then to the left
+  for(const [a,b] of runs()){let len=b-a+1;if(len>=minHold)continue;let best=null;
+   for(let r=0;r<=minHold-len;r++){const l=minHold-len-r;const T=U.map(u=>({...u}));let okk=true;for(let x=a-l;x<=b+r;x++){if(x<0||x>=T.length){okk=false;break;}T[x].s=1;}if(!okk)continue;const t=sim(T);if(t&&t<=t0+slack){best=T;break;}}
+   if(!best){for(let ext=minHold-len;ext>0;ext--){const T=U.map(u=>({...u}));for(let x=b+1;x<=Math.min(T.length-1,b+ext);x++)T[x].s=1;const t=sim(T);if(t&&t<=t0+slack){best=T;break;}}}
+   if(best)U=best;}}
+ const plan=[settle.slice()];for(const u of U){const l=plan[plan.length-1];if(plan.length>1&&l[1]===u.dir&&l[2]===u.j&&l[3]===u.s&&!u.j)l[0]+=10;else plan.push([10,u.dir,u.j,u.s]);}
+ out.push({name:c.name,before:t0,after:sim(U),holds:runs().map(([a,b])=>b-a+1),plan});}
+window.R=out;document.title='DONE';})();</script></body></html>
